@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.epicor.EpicorApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-09-27T10:34:50.589Z" hostname="192.168.1.3" time="0.287">
+  <properties/>
+  <testcase name="contextLoads()" classname="com.epicor.EpicorApplicationTests" time="0.287"/>
+  <system-out><![CDATA[16:04:49.878 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.epicor.EpicorApplicationTests]: EpicorApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+16:04:49.914 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.epicor.EpicorApplication for test class com.epicor.EpicorApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.3)
+
+2025-09-27T16:04:50.054+05:30  INFO 2667 --- [epicor] [    Test worker] com.epicor.EpicorApplicationTests        : Starting EpicorApplicationTests using Java 17.0.11 with PID 2667 (started by ismail in /Users/ismail/Downloads/all_like_0.09)
+2025-09-27T16:04:50.054+05:30  INFO 2667 --- [epicor] [    Test worker] com.epicor.EpicorApplicationTests        : No active profile set, falling back to 1 default profile: "default"
+2025-09-27T16:04:50.545+05:30  INFO 2667 --- [epicor] [    Test worker] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2025-09-27T16:04:50.573+05:30  INFO 2667 --- [epicor] [    Test worker] com.epicor.EpicorApplicationTests        : Started EpicorApplicationTests in 0.617 seconds (process running for 0.998)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
