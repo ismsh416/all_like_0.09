@@ -2,47 +2,45 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "epicor-app"
         PROJECT = "ismailsh416-dev"
-        REGISTRY = "image-registry.openshift-image-registry.svc:5000"
+        APP_NAME = "epicor-app"
     }
 
     stages {
         stage('Checkout') {
             steps {
+                // Checkout your branch
                 git branch: 'master', url: 'https://github.com/ismsh416/all_like_0.09.git'
             }
         }
 
-        stage('Build JAR with Gradle + JDK 17') {
+        stage('Build JAR') {
             steps {
-                sh """
-                    # Use Gradle Docker image with JDK 17
-                    docker run --rm -v \$(pwd):/workspace -w /workspace gradle:8.3-jdk17 ./gradlew clean bootJar
-                """
+                // Use Gradle wrapper to build the JAR
+                sh './gradlew clean bootJar'
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Deploy to OpenShift') {
             steps {
+                // Start S2I build in OpenShift with the JAR
                 sh """
-                    docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} .
-                """
-            }
-        }
+                oc project ${PROJECT}
 
-        stage('Push & Deploy to OpenShift') {
-            steps {
-                sh """
-                    # Tag & push Docker image to OpenShift internal registry
-                    docker tag ${IMAGE_NAME}:${BUILD_NUMBER} ${REGISTRY}/${PROJECT}/${IMAGE_NAME}:${BUILD_NUMBER}
-                    docker push ${REGISTRY}/${PROJECT}/${IMAGE_NAME}:${BUILD_NUMBER}
+                # Check if BuildConfig exists, create if missing
+                if ! oc get bc ${APP_NAME} >/dev/null 2>&1; then
+                    oc new-build registry.access.redhat.com/ubi8/openjdk-17 --binary --name=${APP_NAME}
+                fi
 
-                    # Deploy to OpenShift project
-                    oc project ${PROJECT}
-                    oc set image deployment/${IMAGE_NAME} ${IMAGE_NAME}=${REGISTRY}/${PROJECT}/${IMAGE_NAME}:${BUILD_NUMBER} --record || \
-                    oc new-app ${REGISTRY}/${PROJECT}/${IMAGE_NAME}:${BUILD_NUMBER} --name=${IMAGE_NAME}
-                    oc rollout status deployment/${IMAGE_NAME}
+                # Start build from the generated JAR
+                oc start-build ${APP_NAME} --from-file=build/libs/epicor-0.0.1-SNAPSHOT.jar --follow
+
+                # Deploy or rollout the application
+                if ! oc get deployment ${APP_NAME} >/dev/null 2>&1; then
+                    oc new-app ${APP_NAME} --name=${APP_NAME}
+                else
+                    oc rollout latest deployment/${APP_NAME}
+                fi
                 """
             }
         }
@@ -50,10 +48,10 @@ pipeline {
 
     post {
         success {
-            echo "Build & Deployment completed successfully!"
+            echo "Build and deployment completed successfully!"
         }
         failure {
-            echo "Pipeline failed. Check the logs."
+            echo "Pipeline failed. Check logs for details."
         }
     }
 }
