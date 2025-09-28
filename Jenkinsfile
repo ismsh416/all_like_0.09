@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'gradle:8.3-jdk17'  // Gradle + JDK 17
-            args '-u root:root'        // optional if you need root permissions
-        }
-    }
+    agent any
 
     environment {
         IMAGE_NAME = "epicor-app"
@@ -19,15 +14,13 @@ pipeline {
             }
         }
 
-        stage('Build JAR') {
-            steps {
-                sh './gradlew clean bootJar'
-            }
-        }
-
-        stage('Docker Build') {
+        stage('Build Docker Image') {
             steps {
                 sh """
+                    # Use Gradle wrapper (bundled with project)
+                    ./gradlew clean bootJar
+
+                    # Build Docker image
                     docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} .
                 """
             }
