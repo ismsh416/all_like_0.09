@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/your-repo/epicor.git'
+                git branch: 'main', url: 'https://github.com/ismsh416/all_like_0.09.git'
             }
         }
 
