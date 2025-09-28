@@ -29,7 +29,7 @@ pipeline {
 
                 # Check if BuildConfig exists, create if missing
                 if ! oc get bc ${APP_NAME} >/dev/null 2>&1; then
-                    oc new-build registry.access.redhat.com/ubi8/openjdk-17 --binary --name=${APP_NAME}
+                    oc new-build registry.access.redhat.com/ubi8/openjdk-11 --binary --name=${APP_NAME}
                 fi
 
                 # Start build from the generated JAR
